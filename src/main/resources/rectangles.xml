@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rectangles>
+    <rectangle>
+        <a>27.0</a>
+        <b>31.0</b>
+    </rectangle>
+    <rectangle>
+        <a>31.0</a>
+        <b>35.0</b>
+    </rectangle>
+    <rectangle>
+        <a>31.0</a>
+        <b>27.0</b>
+    </rectangle>
+    <rectangle>
+        <a>27.0</a>
+        <b>29.0</b>
+    </rectangle>
+    <rectangle>
+        <a>32.0</a>
+        <b>30.0</b>
+    </rectangle>
+    <rectangle>
+        <a>27.0</a>
+        <b>30.0</b>
+    </rectangle>
+    <rectangle>
+        <a>32.0</a>
+        <b>35.0</b>
+    </rectangle>
+    <rectangle>
+        <a>27.0</a>
+        <b>26.0</b>
+    </rectangle>
+    <rectangle>
+        <a>34.0</a>
+        <b>33.0</b>
+    </rectangle>
+    <rectangle>
+        <a>29.0</a>
+        <b>31.0</b>
+    </rectangle>
+</rectangles>
