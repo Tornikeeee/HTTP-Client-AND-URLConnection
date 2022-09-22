@@ -56,6 +56,39 @@
   <build>
     <finalName>HTTP-Client-AND-URLConnection</finalName>
     <plugins>
+
+<!--      <plugin>-->
+<!--        <artifactId>maven-compiler-plugin</artifactId>-->
+<!--        <version>3.8.1</version>-->
+<!--      </plugin>-->
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-assembly-plugin</artifactId>-->
+<!--        <version>3.4.2</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <phase>package</phase>-->
+<!--            <goals>-->
+<!--              <goal>single</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <descriptorRefs>-->
+<!--                <descriptorRef>jar-with-dependencies</descriptorRef>-->
+<!--              </descriptorRefs>-->
+<!--              <appendAssemblyId>false</appendAssemblyId>-->
+<!--              <archive>-->
+<!--                <manifest>-->
+<!--                  <mainClass>com.tadamia.Main</mainClass>-->
+<!--                </manifest>-->
+<!--                <manifestEntries>-->
+<!--                  <Class-Path>./config/</Class-Path>-->
+<!--                </manifestEntries>-->
+<!--              </archive>-->
+<!--            </configuration>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
