@@ -19,7 +19,7 @@ public class TriangleServlet extends HttpServlet {
         Properties props = new Properties();
 
         try {
-            Main.getCredentials(req.getParameter("username"), req.getParameter("password"), response,this.getClass());
+            //Main.getCredentials(req.getParameter("username"), req.getParameter("password"), response,this.getClass());
 
             final Double p = Double.parseDouble(req.getParameter("p"));
             if (p < 0)

@@ -28,6 +28,7 @@ public class Main {
 
         //1. წინა ორი დავალების (14.09.2022 და 16.09.2022) ვებ სერვისებს დაუწერეთ
         //კლიენტები როგორც ჯავას ახალი http client-ით, ისე UrlConnection კლასებით.
+        System.out.println("\nTask 1");
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/http-client-and-urlconnection/" + props.getProperty("http_client_url") + "?s=899"))
@@ -44,6 +45,7 @@ public class Main {
 
         //4.  ახალი http client-ის ნაწილში რამდენიმე request გაუშვით პარალელურადაც
         //ასინქრონული გაგზავნის მეთოდით და დაამუშავეთ დაბრუნებული პასუხებიც.
+        System.out.println("\nTask 4");
         HttpClient clientAsync = HttpClient.newHttpClient();
         List<URI> uris = Arrays.asList(new URI("http://localhost:8080/http-client-and-urlconnection/" + props.getProperty("http_client_url") + "?s=899"),
                 new URI("http://localhost:8080/http-client-and-urlconnection/" + props.getProperty("http_url_connection") + "?p=12"));
@@ -68,41 +70,22 @@ public class Main {
         //5.  ერთ რომელიმე სერვლეტს სერვერის მხარეს დაუმატეთ http ავტორიზაცია და
         //შემდეგ კლიენტის მხარეს დაწერეთ ამ სერვლეტის გამოძახება ორივე ხერხით:
         //როგორც PasswordAuthentication, ისე Authorization ჰედერით.
+        System.out.println("\nTask 5");
         HttpClient clientAuth = HttpClient.newBuilder().authenticator(new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("admin", "qwer".toCharArray());
+                return new PasswordAuthentication("admin", "asdASD123".toCharArray());
             }
         }).build();
 
-        HttpRequest httpRequestAuth = HttpRequest.newBuilder(new URI("http://localhost:8080/http-client-and-urlconnection/" + props.getProperty("http_client_url") + "?s=899")).header("Authorization", "Basic " +
-                Base64.getEncoder().encodeToString(("adm0in:qwerty").getBytes())).build();
+        HttpRequest httpRequestAuth = HttpRequest.newBuilder(new URI("http://localhost:8080/http-client-and-urlconnection/basicAuth")).header("Authorization", "Basic " +
+                Base64.getEncoder().encodeToString(("admin:asdASD123").getBytes())).POST(HttpRequest.BodyPublishers.noBody()).build();
 
 
         HttpResponse<String> responseAuth = clientAuth.send(httpRequestAuth, HttpResponse.BodyHandlers.ofString());
 
+        System.out.println(responseAuth.statusCode());
         System.out.println(responseAuth.body());
-    }
-
-    public static void getCredentials(String headerUsername, String headerPassword, HttpServletResponse httpResponse, Class class_) throws IOException {
-        if (headerUsername == null || headerPassword == null)
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-
-        User userFromHeader = new User(headerUsername, headerPassword);
-
-        InputStream in = class_.getClassLoader().getResourceAsStream("config.properties");
-        Properties props = new Properties();
-        try {
-            props.load(in);
-            String username = props.getProperty("username", null);
-            String password = props.getProperty("password", null);
-            User userFromConfig = new User(username, password);
-
-            if (!userFromHeader.equals(userFromConfig))
-                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
     }
 }
 

@@ -1,5 +1,8 @@
 package com.tadamia;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import org.apache.logging.log4j.ThreadContext;
 
 import javax.servlet.annotation.WebServlet;
@@ -15,49 +18,38 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Properties;
 
-@WebServlet(name = "RectangleServlet", urlPatterns = "/rectangles")
-public class RectangleServlet extends HttpServlet {
+@WebServlet(name = "AddRectangleServlet", urlPatterns = "/basicAuth")
+public class AddRectangleServlet extends HttpServlet {
+    Rectangles rectangles = new Rectangles();
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        Main.getCredentials(req.getParameter("username"), req.getParameter("password"), resp,this.getClass());
-
-
-        ThreadContext.put("methodName","RectangleServlet");
-        ThreadContext.put("alertMessage","alert message 2");
+    public void init() {
+        ThreadContext.put("methodName","AddRectangleServlet");
+        ThreadContext.put("alertMessage","initializing");
         Main.lgg.info("doing get method");
-
-
 
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.properties");
         Properties props = new Properties();
         Rectangle rectangle = null;
-        int i = 0;
+        rectangles.setRectangleList(new ArrayList<>());
 
         try (in) {
-            final double area = Double.parseDouble(req.getParameter("s"));
-
-            if (area < 0)
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST,"query param is negative");
-
             props.load(in);
             String database = props.getProperty("database_rectangles");
-
-            resp.setContentType("text/html");
-            PrintWriter out = resp.getWriter();
 
             XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
             XMLEventReader reader = xmlInputFactory.createXMLEventReader(new FileReader(database));
 
-            while (reader.hasNext()){
+            while (reader.hasNext()) {
                 XMLEvent nextEvent = reader.nextEvent();
 
-                if (nextEvent.isStartElement()){
+                if (nextEvent.isStartElement()) {
                     StartElement startElement = nextEvent.asStartElement();
 
-                    switch (startElement.getName().getLocalPart()){
+                    switch (startElement.getName().getLocalPart()) {
                         case "rectangle":
                             rectangle = new Rectangle();
                             break;
@@ -77,26 +69,36 @@ public class RectangleServlet extends HttpServlet {
                 if (nextEvent.isEndElement()) {
                     EndElement endElement = nextEvent.asEndElement();
                     if (endElement.getName().getLocalPart().equals("rectangle")) {
-                        assert rectangle != null;
-                        if (rectangle.getArea() == area) {
-                            out.println("<h2>[" + rectangle + "]</h2><br>");
-                            i++;
-                        }
+                        rectangles.getRectangleList().add(rectangle);
                     }
                 }
             }
 
-            if (i == 0)
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND,"2");
-
-        } catch (NumberFormatException | NullPointerException e) {
-            try {
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST,e.getMessage());
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        } catch (XMLStreamException | IOException e) {
+        } catch (IOException | XMLStreamException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            JAXBContext context= JAXBContext.newInstance(Rectangle.class);
+//            Unmarshaller unmarshaller = context.createUnmarshaller();
+            Rectangle rectangle = new Rectangle(); //(Rectangle) unmarshaller.unmarshal(req.getInputStream());
+            rectangle.setA(10);
+            rectangle.setB(20);
+            rectangles.getRectangleList().add(rectangle);
+
+
+            resp.setContentType("text/xml");
+            resp.setCharacterEncoding("UTF-8");
+            context = JAXBContext.newInstance(Rectangles.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.marshal(rectangles,resp.getOutputStream());
+
+        } catch (JAXBException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
