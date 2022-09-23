@@ -21,7 +21,10 @@ import java.util.Properties;
 @WebServlet(name = "RectangleServlet", urlPatterns = "/rectangles")
 public class RectangleServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Main.getCredentials(req.getParameter("username"), req.getParameter("password"), resp,this.getClass());
+
+
         ThreadContext.put("methodName","RectangleServlet");
         ThreadContext.put("alertMessage","alert message 2");
         Main.lgg.info("doing get method");
